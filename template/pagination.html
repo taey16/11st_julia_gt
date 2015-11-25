@@ -1,0 +1,18 @@
+<div class="group_paging">
+  <a href="javascript:paging('1')">First page</a>
+  {% if page_no > 1 %}
+  <a id="go_prev_page" href="#" class="link_edge" onclick="javascript:paging('{{page_no_prev}}')">Prev(A)</a>
+  {% endif %}
+  {% for p in page_list %}
+    {% if p == page_no %}
+      <a href="#" class="on" onclick="javascript:paging('{{p}}')"> {{p}} </a>
+    {% else %}
+      <a href="#" onclick="javascript:paging('{{p}}')"> &nbsp;{{p}} </a>
+    {% endif %}
+  {% endfor %}
+  {% if page_no < page_no_max %}
+    <a id="go_next_page" href="#" class="link_edge" onclick="javascript:paging('{{page_no_next}}')">Next(S)</a>
+  {% endif %}
+  <a href="javascript:paging('-1')">Last page</a>
+  &nbsp; {{page_no}} / {{page_no_max}}
+</div>

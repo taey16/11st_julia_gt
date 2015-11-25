@@ -1,0 +1,43 @@
+<table class="fancy">
+  <tr>
+  <td>
+  label
+    <!-- <select id="filter_type" disabled="disabled"> -->
+    <select id="filter_type">
+      {% for t in filter_type %}
+        <option value="{{t}}" {% if selected_filter_type == t %} selected {% endif %}> {{t}} </option>
+      {% endfor %}      
+    </select>
+  </td>
+  lctgr
+    <select id="lctgr_nm">
+      {% for t in lctgr_nm %}
+        <option value="{{t}}" {% if selected_lctgr_nm == t %} selected {% endif %}> {{t}} </option>
+      {% endfor %}
+    </select>
+  mctgr
+    <select id="mctgr_nm">
+      {% for t in mctgr_nm %}
+        <option value="{{t}}" {% if selected_mctgr_nm == t %} selected {% endif %}> {{t}} </option>
+      {% endfor %}
+    </select>
+  sctgr
+    <select id="sctgr_nm">
+      {% for t in sctgr_nm %}
+        <option value="{{t}}" {% if selected_sctgr_nm == t %} selected {% endif %}> {{t}} </option>
+      {% endfor %}
+    </select>
+  tag
+    <select id="tag">
+      {% for t in tag %}
+        <option value="{{t}}" {% if selected_tag == t %} selected {% endif %}> {{t}} </option>
+      {% endfor %}
+    </select>
+  <td>
+    <input type="button" onclick="javascript:paging(1)" value="Apply"></input>
+    <input type="button" onclick="javascript:$('input').filter(function(){return this.id.match(/[0-9]_btn_good/);}).click()" value="All good"></input>
+    <input type="button" onclick="javascript:$('input').filter(function(){return this.id.match(/[0-9]_btn_bad/);}).click()" value="All bad"></input>
+    <input type="button" onclick="javascript:$('input').filter(function(){return this.id.match(/[0-9]_btn_unknown/);}).click()" value="All Unknown"></input>
+  </td>
+  </tr>
+</table>

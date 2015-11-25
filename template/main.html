@@ -1,0 +1,203 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript" src="/static/js/dough-script-0.2.0.js"> </script>
+    <link rel="stylesheet" type="text/css" href="/static/js/dough-responsible-0.2.0.css">
+    <link rel="stylesheet" type="text/css" href="/static/js/dough-0.2.0.css">
+  </head>
+  
+  {{ style_html }}
+  
+  <script type="text/javascript">
+  var cur_idx = 1;
+  var id_list = {{id_list|safe}};
+  function request_status_update(id, command){
+    $.get("/update/", { id: id, command: command }, function(data){
+      var ret = JSON.parse(data);
+      if( ret.success == 0 ){
+       alert(ret.msg);
+      } 
+    });
+
+    if( command == 'good' ) {
+      $('#record'+id).attr('bgcolor','white');
+      $('#'+id+'_btn_good').prop('checked', true);
+      $('#'+id+'_btn_bad').prop('checked', false);
+      $('#'+id+'_btn_unknown').prop('checked', false);
+    }
+
+    if( command == 'bad' ) {
+      $('#record'+id).attr('bgcolor','IndianRed');
+      $('#'+id+'_btn_good').prop('checked', false);
+      $('#'+id+'_btn_bad').prop('checked', true);
+      $('#'+id+'_btn_unknown').prop('checked', false);
+    }
+    if( command == 'unknown' ) {
+      $('#record'+id).attr('bgcolor','green');
+      $('#'+id+'_btn_good').prop('checked', false);
+      $('#'+id+'_btn_bad').prop('checked', false);
+      $('#'+id+'_btn_unknown').prop('checked', true);
+    }
+  }
+
+  function override_keyboard_event(e){
+    if( String.fromCharCode(e.keyCode) == 'A' ){
+      $('#go_prev_page').trigger('click');
+    }
+    if( String.fromCharCode(e.keyCode) == 'S' ){
+      $('#go_next_page').trigger('click');
+    }
+    /*
+    if( String.fromCharCode(e.keyCode) == 'E' ){
+    if(cur_idx-1 >= 0)
+      cur_idx -= 1;
+      $('#chk_btn_pos_'+id_list[cur_idx]).focus();
+      $(document.body).scrollTop($('#record'+id_list[cur_idx]).offset().top);
+    }
+    i( String.fromCharCode(e.keyCode) == 'J' ){
+    if(cur_idx+1 < id_list.length)
+      cur_idx += 1;
+    $('#chk_btn_pos_'+id_list[cur_idx]).focus();
+    $(document.body).scrollTop($('#record'+id_list[cur_idx]).offset().top);
+    }
+    if( String.fromCharCode(e.keyCode) == 'H' ){
+    $('#chk_btn_pos_'+id_list[cur_idx]).focus();
+    }             
+    if( String.fromCharCode(e.keyCode) == 'L' ){
+    $('#chk_btn_neg_'+id_list[cur_idx]).focus();
+    }
+    */            
+  }
+
+  function paging(page_no){
+    var user = $('#user').val();
+    var filter_type = $('#filter_type :selected').val();
+    var lctgr_nm = $('#lctgr_nm :selected').val();
+    var mctgr_nm = $('#mctgr_nm :selected').val();
+    var sctgr_nm = $('#sctgr_nm :selected').val();
+    var tag = $('#tag :selected').val();
+    var query_string = '/?page_no=' + page_no + 
+                       '&filter_type=' + filter_type + 
+                       '&lctgr_nm=' + lctgr_nm +
+                       '&mctgr_nm=' + mctgr_nm +
+                       '&sctgr_nm=' + sctgr_nm +
+                       '&tag=' + tag
+                       ;
+    window.location = query_string;
+  }
+  document.onkeydown = override_keyboard_event;
+  </script>
+
+  <body width="100%">
+  <div> {{ page_html }} </div>
+  <div align="center"> {{ option_html }} </div>
+
+  <div align="center">
+    <table class="d_table">
+      <tr>
+      {% for record in records %}
+        <td id="record{{record.id}}" width="160px" 
+          {% if record.label == 1 %} bgcolor="IndianRed" 
+          {% elif record.label == -1 %} bgcolor="green" 
+          {%endif %}
+        > 
+          <a href="http://i.011st.com/{{record.url}}" target="_blank"><img class="image_show" height="160px" width="160px" src="http://i.011st.com/{{record.url}}"></a>
+          <span class="line_break"></span>
+          <div>
+            <ul style="vertical-align:top">
+              <li>prd:{{record.prd_nm}}</li>
+              <li>lctgr:{{record.lctgr_nm}}</li>
+              <li>mctgr:{{record.mctgr_nm}}</li>
+              <li>sctgr:{{record.sctgr_nm}}</li>
+              <li>tag:{{record.tag}}</li>
+              <li>gender:{{record.gender}}</li>
+              <li>
+                <label>
+                  <input type="radio" id="{{record.id}}_btn_good" value="0" class="d_form" 
+                  {% if record.label == 0 %} checked {% endif %}
+                  onclick="javascript:request_status_update({{record.id}}, 'good');"
+                  />Good
+                  <input type="radio" id="{{record.id}}_btn_bad" value="1" class="d_form" 
+                  {% if record.label == 1 %} checked {% endif %}
+                  onclick="javascript:request_status_update({{record.id}}, 'bad');"
+                  />Bad
+                  <input type="radio" id="{{record.id}}_btn_unknown" value="-1" class="d_form" 
+                  {% if record.label == -1 %} checked {% endif %}
+                  onclick="javascript:request_status_update({{record.id}}, 'unknown');"
+                  />unknown 
+                </label>
+              </li>
+            </ul>
+          </div>
+        </td>
+        {% if forloop.counter|divisibleby:5 %}</tr><tr>{% endif %}
+      {% endfor %}
+      </tr>
+    </table>
+  </div>
+
+  <div> {{ page_html }} </div>
+
+  <script>
+    $(".image_show").mouseover(function(e) {
+      img_x = $(this).parent().offset().left + $(this).width();
+      img_y = $(this).parent().offset().top - $(this).height();
+      var wr = Math.min(1.0, 800.0 / this.naturalWidth);
+      var hr = Math.min(1.0, 600.0 / this.naturalHeight);
+      var ratio = Math.min(wr, hr);
+      var h = this.naturalHeight * ratio;
+      var w = this.naturalWidth * ratio;
+      console.log(h + " " + w + " " + ratio);
+      console.log(this.naturalHeight + " " + this.naturalWidth);
+      if ( img_y + h > $(document).height() ) {
+        img_y = $(document).height() - h - 80;
+      }
+      else {
+        
+      }
+      if ( img_x + w > $(document).width() ) {
+        img_x -= img_x + w - $(document).width() + $(document).width() - img_x + $(this).width();
+        img_x -= 20;
+      }
+      else {
+        img_x += 20;
+      }
+      console.log(img_x + " " + img_y);
+      div_tag = $('<div>').css({position: 'absolute', left: img_x, top: img_y});
+      div_tag.attr('id', 'img_div0404');
+      img_tag = $('<img>');
+      img_tag.attr('src', this.src);
+      img_tag.attr('style', 'border: 4px solid; border-color: #f00; max-width: 800px; max-height: 600px;');
+      div_tag.append(img_tag);
+      $(this).parent().append(div_tag);
+      
+    }).mouseout(function() {
+      $("#img_div0404").remove();
+    });
+
+    $.urlParam = function(name){
+      var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
+      if (results==null){
+        return null;
+      }
+      else{
+        return results[1] || 0;
+      }
+    }
+
+    $(document).ready(function() {  
+      var page_no = $.urlParam('page_no');
+      if ( page_no == null ) {
+        var latest_href = $.cookie('latest_href');
+        if ( latest_href != undefined ) {
+          window.location.href = latest_href;
+        }
+      }
+      else {
+        //$.cookie('latest_href', window.location.href);
+      }
+    });
+  </script>
+  </body>
+</html>
