@@ -9,7 +9,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-  ('taey16', 'taey16@sk.com'),
+  ('taey16', 'taey1600@gmail.com'),
 )
 
 MANAGERS = ADMINS
@@ -19,15 +19,15 @@ DATABASES = {
     # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
     'ENGINE': 'django.db.backends.mysql',
     # path to database file if using sqlite3.
-    'NAME': 'PBrain',
-    'USER': 'taey16',
-    'PASSWORD': 'Skp02596',
+    'NAME': '',
+    'USER': '',
+    'PASSWORD': '',
     # Set to empty string for localhost. 
     # Not used with sqlite3.
-    'HOST': '10.202.211.120',
+    'HOST': '',
     # Set to empty string for default. 
     # Not used with sqlite3.
-    'PORT': '3307',
+    'PORT': '',
   }
 }
 
