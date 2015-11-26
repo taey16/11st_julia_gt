@@ -103,10 +103,11 @@
           {%endif %}
         > 
           <a href="http://i.011st.com/{{record.url}}" target="_blank"><img class="image_show" height="160px" width="160px" src="http://i.011st.com/{{record.url}}"></a>
-          <span class="line_break"></span>
+          <!-- <span class="line_break"></span> -->
           <div>
             <ul style="vertical-align:top">
-              <li>prd:{{record.prd_nm}}</li>
+              <li>prd:<input type="text" id="{{record.id}}_text" value="{{record.prd_nm}}" size="30" class="d_form" 
+                       onchange="javascript:request_status_update({{record.id}}, this.value);"></li>
               <li>lctgr:{{record.lctgr_nm}}</li>
               <li>mctgr:{{record.mctgr_nm}}</li>
               <li>sctgr:{{record.sctgr_nm}}</li>
